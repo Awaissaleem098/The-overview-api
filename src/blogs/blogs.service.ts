@@ -1,43 +1,63 @@
-import { Injectable } from '@nestjs/common';
-import { Blog } from './blogs.interface';
+import { Injectable, Logger } from '@nestjs/common';
+import { CreateBlogDto, UpdateBlogDto } from './blogs.dto';
+import { BlogsRepository } from './blogs.repository';
 
 @Injectable()
 export class BlogsService {
-  private readonly blogs: Blog[] = [
-    {
-      title: '<p>What is a clean code  and how to write it</p>',
-      description:
-        '<p>Coding is not only writting code but it’s also writting code which is  readable, reliable, maintenable, reusable , portable and reusable.\n' +
-        'Writting clean code is important because it reduces time you spend debuging or even coding new functionalities. At the other end poor code may results in increasing financial costs as the average developer spends 42% of their time dealing with technical debt and maintenance issues\n' +
-        '\n</p>',
-      content:
-        '<p>Coding is not only writting code but it’s also writting code which is  readable, reliable, maintenable, reusable , portable and reusable.</p>' +
-        '<h2>Why clean code  matters</h2> <p>Writting clean code is important because it reduces time you spend debuging or even coding new functionalities.' +
-        ' At the other end poor code may results in increasing financial costs as the average developer spends 42% of their time dealing with technical debt and maintenance issues.`</p>',
-      image: 'https://material.angular.io/assets/img/examples/shiba1.jpg',
-      date: new Date(),
-      feedbacks: [
-        {
-          name: 'Yves Sheja',
-          message:
-            '<p>Thank you, it was helpful i found also that writting clean code is important because it reduces \n' +
-            'time you spend debuging. At the other end poor code may results in increasing financial costs\n' +
-            'as the average developer spends 42% of their time dealing with technical debt and\n' +
-            'maintenance issues. </p>',
-        },
-        {
-          name: 'Bob',
-          message:
-            '<p>Thank you, it was helpful i found also that writting clean code is important because it reduces \n' +
-            'time you spend debuging. At the other end poor code may results in increasing financial costs\n' +
-            'as the average developer spends 42% of their time dealing with technical debt and\n' +
-            'maintenance issues. </p>',
-        },
-      ],
-    },
-  ];
+  private logger = new Logger(BlogsService.name);
 
-  public findAll(): Blog[] {
-    return this.blogs;
+  constructor(private repository: BlogsRepository) {}
+
+  public async create(createBlogDto: CreateBlogDto) {
+    try {
+      return await this.repository.create(createBlogDto);
+    } catch (e) {
+      this.logger.error('Failed to create a blog', e);
+    }
+  }
+
+  public async findOne(blogId: string) {
+    try {
+      return await this.repository.findOne(blogId);
+    } catch (e) {
+      this.logger.error('Failed to find a blog', e);
+      throw e;
+    }
+  }
+
+  public async findAll() {
+    try {
+      return await this.repository.findAll();
+    } catch (e) {
+      this.logger.error('Failed to find all blogs', e);
+      throw e;
+    }
+  }
+
+  public async update(blogId: string, updateBlogDto: UpdateBlogDto) {
+    try {
+      return await this.repository.update(blogId, updateBlogDto);
+    } catch (e) {
+      this.logger.error('Failed to update a blog', e);
+      throw e;
+    }
+  }
+
+  public async deleteOne(blogId: string) {
+    try {
+      return await this.repository.deleteOne(blogId);
+    } catch (e) {
+      this.logger.error('Failed to delete a blog', e);
+      throw e;
+    }
+  }
+
+  public async deleteMany() {
+    try {
+      return await this.repository.deleteMany();
+    } catch (e) {
+      this.logger.error('Failed to delete blogs', e);
+      throw e;
+    }
   }
 }
