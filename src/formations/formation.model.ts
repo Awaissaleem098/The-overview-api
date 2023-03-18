@@ -23,6 +23,7 @@ export class Formation {
   constructor(title: string, description: string, content: string, duration: string, logo: string) {
     this.title = title;
     this.description = description;
+    this.content = content;
     this.duration = duration;
     this.logo = logo;
   }

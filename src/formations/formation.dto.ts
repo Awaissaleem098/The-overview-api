@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class FormationDescriptionOutputDto {
+export class FormationPreviewDto {
   publicId: string;
   title: string;
   logo: string;

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Logger, NotFoundException, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { FormationsService } from './formations.service';
-import { CreateFormationDto } from './formation.dto';
+import { CreateFormationDto, FormationPreviewDto } from './formation.dto';
 import { Formation } from './formation.model';
 import { FormationNotFound } from './formation.error';
 
@@ -18,23 +18,52 @@ export class FormationsController {
       .catch((e) => this.handleError(e));
   }
 
-  @Get(':id')
-  private async findByPublicId(@Param('id', ParseUUIDPipe) publicId: string): Promise<Formation> {
+  @Get('previews')
+  private async getAllFormationsPreviews(): Promise<FormationPreviewDto[]> {
     return this.service
-      .findByPublicId(publicId)
+      .getAll()
+      .then((foundFormations) => foundFormations.map((foundFormation) => this.toFormationPreviewDto(foundFormation)))
+      .catch((e) => this.handleError(e));
+  }
+
+  @Get(':id')
+  private async getFormationByPublicId(@Param('id', ParseUUIDPipe) publicId: string): Promise<Formation> {
+    return this.service
+      .getByPublicId(publicId)
       .then((foundFormation: Formation) => foundFormation)
       .catch((e) => this.handleError(e));
   }
 
-  @Get()
-  private async findAll(): Promise<Formation[]> {
+  @Get(':id/overview')
+  private async getFormationPreviewByPublicId(
+    @Param('id', ParseUUIDPipe) publicId: string,
+  ): Promise<FormationPreviewDto> {
     return this.service
-      .findAll()
-      .then((foundFormations) => foundFormations)
+      .getByPublicId(publicId)
+      .then((foundFormation: Formation) => this.toFormationPreviewDto(foundFormation))
       .catch((e) => this.handleError(e));
   }
 
+  @Get(':id/content')
+  private async getFormationContentByPublicId(@Param('id', ParseUUIDPipe) publicId: string): Promise<string> {
+    return this.service
+      .getByPublicId(publicId)
+      .then((foundFormation: Formation) => foundFormation.content)
+      .catch((e) => this.handleError(e));
+  }
+
+  private toFormationPreviewDto(formation: Formation): FormationPreviewDto {
+    return {
+      publicId: formation.publicId,
+      title: formation.title,
+      logo: formation.logo,
+      description: formation.description,
+      duration: formation.duration,
+    };
+  }
+
   private handleError(e: Error): never {
+    console.log(e);
     this.logger.debug(e.message);
     if (e instanceof FormationNotFound) {
       throw new NotFoundException(e);

@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { FormationsModule } from './formations/formations.module';
 
 @Module({
-  imports: [MongooseModule.forRoot('mongodb://localhost/theoverview'), BlogsModule, FormationsModule],
+  imports: [MongooseModule.forRoot('mongodb://127.0.0.1:27017/theoverview'), BlogsModule, FormationsModule],
   controllers: [AppController],
   providers: [AppService],
 })

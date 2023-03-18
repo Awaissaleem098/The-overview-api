@@ -24,7 +24,7 @@ export class FormationsService {
     return await this.repository.create(formation);
   }
 
-  async findByPublicId(publicId: string): Promise<Formation | FormationNotFound> {
+  async getByPublicId(publicId: string): Promise<Formation | FormationNotFound> {
     const foundFormation = await this.repository.findByPublicId(publicId);
     if (!foundFormation) {
       return new FormationNotFound(publicId);
@@ -32,7 +32,7 @@ export class FormationsService {
     return foundFormation;
   }
 
-  async findAll(): Promise<Formation[]> {
+  async getAll(): Promise<Formation[]> {
     return await this.repository.findAll();
   }
 }
