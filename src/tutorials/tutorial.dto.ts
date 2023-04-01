@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class FormationPreviewDto {
+export class TutorialPreviewDto {
   publicId: string;
   title: string;
   logo: string;
@@ -8,11 +8,11 @@ export class FormationPreviewDto {
   duration: string;
 }
 
-export class FormationContentOutPutDto {
+export class TutorialContentOutPutDto {
   content: string;
 }
 
-export class CreateFormationDto {
+export class CreateTutorialDto {
   @IsString()
   @IsNotEmpty()
   title: string;
