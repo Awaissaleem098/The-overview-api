@@ -18,7 +18,7 @@ export class CreateFormationDto {
   title: string;
   @IsString()
   @IsNotEmpty()
-  description: string;
+  previewDescription: string;
   @IsString()
   @IsNotEmpty()
   content: string;
@@ -28,4 +28,5 @@ export class CreateFormationDto {
   @IsString()
   @IsNotEmpty()
   logo: string;
+
 }

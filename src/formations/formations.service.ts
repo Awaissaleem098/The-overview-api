@@ -12,7 +12,7 @@ export class FormationsService {
   async create(createFormationDto: CreateFormationDto): Promise<Formation> {
     const formation = new Formation(
       createFormationDto.title,
-      createFormationDto.description,
+      createFormationDto.previewDescription,
       createFormationDto.content,
       createFormationDto.duration,
       createFormationDto.logo,
