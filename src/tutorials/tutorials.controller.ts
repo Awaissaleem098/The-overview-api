@@ -1,8 +1,19 @@
-import { Body, Controller, Get, Logger, NotFoundException, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  NotFoundException,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { TutorialsService } from './tutorials.service';
 import { CreateTutorialDto, TutorialPreviewDto } from './tutorial.dto';
 import { Tutorial } from './tutorial.model';
 import { TutorialNotFound } from './tutorial.error';
+import { AuthGuard } from "../auth/auth.guard";
 
 @Controller('tutorials')
 export class TutorialsController {
@@ -10,6 +21,7 @@ export class TutorialsController {
 
   constructor(private service: TutorialsService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   private async create(@Body() createTutorialDto: CreateTutorialDto): Promise<Tutorial> {
     return this.service

@@ -3,16 +3,21 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
+import { AuthGuard } from './auth.guard';
+
+export const SECRET_KEY = 'secret'; // TODO remove it in source code and keep it in env file.
+const EXPIRY_TIME = 300; // Expiry in 5 minutes.
 
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'secret', // TODO remove it in source code and keep it in env file.
+      global: true,
+      secret: SECRET_KEY,
       signOptions: {
-        expiresIn: '300s', // Expiry in 5 minutes.
+        expiresIn: EXPIRY_TIME,
       },
     }),
-    forwardRef(() => UsersModule)
+    forwardRef(() => UsersModule),
   ],
   controllers: [AuthController],
   providers: [AuthService],

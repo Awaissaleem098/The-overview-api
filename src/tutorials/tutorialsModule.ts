@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TutorialsController } from './tutorialsController';
+import { TutorialsController } from './tutorials.controller';
 import { TutorialsService } from './tutorials.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Tutorial, TutorialSchema } from './tutorial.model';
