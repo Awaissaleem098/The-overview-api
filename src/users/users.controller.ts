@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CreateUserDto } from './user.dto';
 import { UsersService } from './users.service';
 import { User } from './user.model';
-import { BearerToken } from '../auth/auth.interface';
+import { BearerToken } from '../auth/auth.dto';
 
 @Controller('users')
 export class UsersController {
