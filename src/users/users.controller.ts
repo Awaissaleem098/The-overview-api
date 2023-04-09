@@ -10,13 +10,13 @@ export class UsersController {
 
   @Post('signup')
   private addUser(@Body() createUserDto: CreateUserDto): Promise<BearerToken | void> {
-    return this.usersService.createUser(createUserDto).catch((e) => {
+    return this.usersService.create(createUserDto).catch((e) => {
       console.log('SignUp: Add user failed.', e);
     });
   }
 
   @Get()
   private async getUsers(): Promise<User[]> {
-    return await this.usersService.getUsers();
+    return await this.usersService.getAll();
   }
 }

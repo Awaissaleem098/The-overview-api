@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { JwtModule } from '@nestjs/jwt';
         expiresIn: '300s', // Expiry in 5 minutes.
       },
     }),
+    forwardRef(() => UsersModule)
   ],
   providers: [AuthService],
   exports: [AuthService],

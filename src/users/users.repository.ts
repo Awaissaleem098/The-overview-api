@@ -12,7 +12,7 @@ export class UsersRepository {
     return createdUser.save();
   }
 
-  async findByUsername(username: string): Promise<User> {
+  async findOneByUsername(username: string): Promise<User | null> {
     return this.userModel.findOne({ username: username }).exec();
   }
 
