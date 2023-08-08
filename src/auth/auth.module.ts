@@ -3,10 +3,9 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
-import { AuthGuard } from './auth.guard';
 
 export const SECRET_KEY = 'secret'; // TODO remove it in source code and keep it in env file.
-const EXPIRY_TIME = 300; // Expiry in 5 minutes.
+const EXPIRY_TIME = '10h'; //FIXME Expiry in 5 minutes.
 
 @Module({
   imports: [

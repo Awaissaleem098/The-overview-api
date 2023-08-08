@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import mongoose from 'mongoose';
 import debug from 'debug';
+import { json, urlencoded } from 'express';
 
 const logger = new Logger('NestApplication');
 
@@ -12,6 +13,9 @@ async function bootstrap() {
     mongoose.set('debug', true);
   }
   const app = await NestFactory.create(AppModule);
+  app.use(json({ limit: '10mb' })); // Max of incoming request payload in Json format. For image in tutorial reasons.
+  app.use(urlencoded({ limit: '10mb', extended: true })); // Max of incoming request payload in URL-encoded format. For image in tutorial reasons.
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
