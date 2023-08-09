@@ -16,18 +16,51 @@ export class Tutorial {
   @Prop()
   logo: string;
   @Prop()
+  authorEmail: string;
+  @Prop()
   createdAt: Date;
   @Prop()
   updatedAt: Date;
 
-  constructor(title: string, description: string, content: string, duration: string, logo: string) {
+  constructor(
+    title: string,
+    description: string,
+    content: string,
+    duration: string,
+    logo: string,
+    authorEmail: string,
+  ) {
     this.title = title;
     this.description = description;
     this.content = content;
     this.duration = duration;
     this.logo = logo;
+    this.authorEmail = authorEmail;
   }
 }
 
 export const TutorialSchema = SchemaFactory.createForClass(Tutorial);
 export type TutorialDocument = HydratedDocument<Tutorial>;
+
+export class UpdateTutorial {
+  title?: string;
+
+  description?: string;
+
+  content?: string;
+
+  duration?: string;
+
+  logo?: string;
+
+  updatedAt?: Date;
+
+  constructor(title: string, description: string, content: string, duration: string, logo: string, updatedAt: Date) {
+    this.title = title;
+    this.description = description;
+    this.content = content;
+    this.duration = duration;
+    this.logo = logo;
+    this.updatedAt = updatedAt;
+  }
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Tutorial, TutorialDocument } from './tutorial.model';
+import { Tutorial, TutorialDocument, UpdateTutorial } from './tutorial.model';
 import { Model } from 'mongoose';
 
 @Injectable()
@@ -18,5 +18,13 @@ export class TutorialsRepository {
 
   async findAll(): Promise<Tutorial[]> {
     return this.tutorialModel.find().exec();
+  }
+
+  async update(publicId: string, tutorial: UpdateTutorial): Promise<Tutorial> {
+    const updatedResult = await this.tutorialModel.updateOne({ publicId }, tutorial).exec();
+    if (updatedResult.modifiedCount > 0) {
+      return this.findByPublicId(publicId);
+    }
+    throw Error(`The tutorial with id ${publicId} could not be updated with ${tutorial}`);
   }
 }

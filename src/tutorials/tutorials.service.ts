@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TutorialsRepository } from './tutorials.repository';
-import { CreateTutorialDto } from './tutorial.dto';
-import { Tutorial } from './tutorial.model';
+import { CreateTutorialDto, UpdateTutorialDto } from './tutorial.dto';
+import { Tutorial, UpdateTutorial } from './tutorial.model';
 import { TutorialNotFound } from './tutorial.error';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -16,12 +16,25 @@ export class TutorialsService {
       createTutorialDto.content,
       createTutorialDto.duration,
       createTutorialDto.logo,
+      createTutorialDto.authorEmail,
     );
     tutorial.publicId = uuidv4();
     tutorial.createdAt = new Date();
     tutorial.updatedAt = new Date();
 
     return await this.repository.create(tutorial);
+  }
+
+  async update(updateTutorialDto: UpdateTutorialDto): Promise<Tutorial> {
+    const updateTutorial: UpdateTutorial = new UpdateTutorial(
+      updateTutorialDto.title,
+      updateTutorialDto.description,
+      updateTutorialDto.content,
+      updateTutorialDto.duration,
+      updateTutorialDto.logo,
+      new Date(),
+    );
+    return await this.repository.update(updateTutorialDto.publicId, updateTutorial);
   }
 
   async getByPublicId(publicId: string): Promise<Tutorial | TutorialNotFound> {

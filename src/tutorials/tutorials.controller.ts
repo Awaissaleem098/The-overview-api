@@ -6,27 +6,36 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { TutorialsService } from './tutorials.service';
-import { CreateTutorialDto, TutorialPreviewDto } from './tutorial.dto';
+import { CreateTutorialDto, TutorialPreviewDto, UpdateTutorialDto } from './tutorial.dto';
 import { Tutorial } from './tutorial.model';
 import { TutorialNotFound } from './tutorial.error';
-import { AuthGuard } from "../auth/auth.guard";
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('tutorials')
+@UseGuards(AuthGuard)
 export class TutorialsController {
   private readonly logger = new Logger(TutorialsController.name);
 
   constructor(private service: TutorialsService) {}
 
-  @UseGuards(AuthGuard)
   @Post()
   private async create(@Body() createTutorialDto: CreateTutorialDto): Promise<Tutorial> {
     return this.service
       .create(createTutorialDto)
       .then((createdTutorial) => createdTutorial)
+      .catch((e) => this.handleError(e));
+  }
+
+  @Patch()
+  private async update(@Body() updateTutorialDto: UpdateTutorialDto): Promise<Tutorial> {
+    return this.service
+      .update(updateTutorialDto)
+      .then((updatedTutorial) => updatedTutorial)
       .catch((e) => this.handleError(e));
   }
 
@@ -56,14 +65,6 @@ export class TutorialsController {
       .catch((e) => this.handleError(e));
   }
 
-  @Get(':id/content')
-  private async getTutorialContentByPublicId(@Param('id', ParseUUIDPipe) publicId: string): Promise<string> {
-    return this.service
-      .getByPublicId(publicId)
-      .then((foundTutorial: Tutorial) => foundTutorial.content)
-      .catch((e) => this.handleError(e));
-  }
-
   private toTutorialPreviewDto(tutorial: Tutorial): TutorialPreviewDto {
     return {
       publicId: tutorial.publicId,
@@ -71,6 +72,7 @@ export class TutorialsController {
       logo: tutorial.logo,
       description: tutorial.description,
       duration: tutorial.duration,
+      authorEmail: tutorial.authorEmail,
     };
   }
 
