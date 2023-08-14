@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TutorialsRepository } from './tutorials.repository';
-import { CreateTutorialDto, UpdateTutorialDto } from './tutorial.dto';
-import { Tutorial, UpdateTutorial } from './tutorial.model';
+import { CreateTutorialDto, FeedbackDto, UpdateTutorialDto } from './tutorial.dto';
+import { Feedback, Tutorial, UpdateTutorial } from './tutorial.model';
 import { TutorialNotFound } from './tutorial.error';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,7 +12,7 @@ export class TutorialsService {
   async create(createTutorialDto: CreateTutorialDto): Promise<Tutorial> {
     const tutorial = new Tutorial(
       createTutorialDto.title,
-      createTutorialDto.previewDescription,
+      createTutorialDto.description,
       createTutorialDto.content,
       createTutorialDto.duration,
       createTutorialDto.logo,
@@ -35,6 +35,16 @@ export class TutorialsService {
       new Date(),
     );
     return await this.repository.update(updateTutorialDto.publicId, updateTutorial);
+  }
+
+  async addFeedback(publicId: string, feedbackDto: FeedbackDto): Promise<Tutorial> {
+    const feedback: Feedback = new Feedback(feedbackDto.username, feedbackDto.message, new Date());
+    let feedbacks = await this.repository.getFeedbacks(publicId);
+    if (!feedbacks) {
+      feedbacks = [];
+    }
+    feedbacks.push(feedback);
+    return await this.repository.addFeedback(publicId, feedbacks);
   }
 
   async getByPublicId(publicId: string): Promise<Tutorial | TutorialNotFound> {

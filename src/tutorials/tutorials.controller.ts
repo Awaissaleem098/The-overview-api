@@ -11,19 +11,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { TutorialsService } from './tutorials.service';
-import { CreateTutorialDto, TutorialPreviewDto, UpdateTutorialDto } from './tutorial.dto';
+import { CreateTutorialDto, FeedbackDto, TutorialPreviewDto, UpdateTutorialDto } from './tutorial.dto';
 import { Tutorial } from './tutorial.model';
 import { TutorialNotFound } from './tutorial.error';
 import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('tutorials')
-@UseGuards(AuthGuard)
 export class TutorialsController {
   private readonly logger = new Logger(TutorialsController.name);
 
   constructor(private service: TutorialsService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   private async create(@Body() createTutorialDto: CreateTutorialDto): Promise<Tutorial> {
     return this.service
       .create(createTutorialDto)
@@ -32,6 +32,7 @@ export class TutorialsController {
   }
 
   @Patch()
+  @UseGuards(AuthGuard)
   private async update(@Body() updateTutorialDto: UpdateTutorialDto): Promise<Tutorial> {
     return this.service
       .update(updateTutorialDto)
@@ -62,6 +63,17 @@ export class TutorialsController {
     return this.service
       .getByPublicId(publicId)
       .then((foundTutorial: Tutorial) => this.toTutorialPreviewDto(foundTutorial))
+      .catch((e) => this.handleError(e));
+  }
+
+  @Patch(':id/feedback')
+  private async addFeedback(
+    @Param('id', ParseUUIDPipe) publicId: string,
+    @Body() feedback: FeedbackDto,
+  ): Promise<Tutorial> {
+    return this.service
+      .addFeedback(publicId, feedback)
+      .then((updatedTutorial) => updatedTutorial)
       .catch((e) => this.handleError(e));
   }
 

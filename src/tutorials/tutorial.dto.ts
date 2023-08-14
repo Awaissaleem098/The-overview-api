@@ -15,7 +15,7 @@ export class CreateTutorialDto {
   title: string;
   @IsString()
   @IsNotEmpty()
-  previewDescription: string;
+  description: string;
   @IsString()
   @IsNotEmpty()
   content: string;
@@ -48,4 +48,13 @@ export class UpdateTutorialDto {
   @IsString()
   @IsOptional()
   logo?: string;
+}
+
+export class FeedbackDto {
+  @IsString()
+  @IsNotEmpty()
+  username?: string;
+  @IsString()
+  @IsOptional()
+  message?: string;
 }

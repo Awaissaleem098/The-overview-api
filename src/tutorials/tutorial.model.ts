@@ -1,6 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
+export class Feedback {
+  username: string;
+  message: string;
+  createdAt: Date;
+
+  constructor(username: string, message: string, createdAt: Date) {
+    this.username = username;
+    this.message = message;
+    this.createdAt = createdAt;
+  }
+}
+
 @Schema()
 export class Tutorial {
   @Prop()
@@ -21,6 +33,8 @@ export class Tutorial {
   createdAt: Date;
   @Prop()
   updatedAt: Date;
+  @Prop()
+  feedbacks?: Feedback[];
 
   constructor(
     title: string,
@@ -50,7 +64,6 @@ export class UpdateTutorial {
   content?: string;
 
   duration?: string;
-
   logo?: string;
 
   updatedAt?: Date;
