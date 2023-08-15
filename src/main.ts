@@ -15,7 +15,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(json({ limit: '10mb' })); // Max of incoming request payload in Json format. For image in tutorial reasons.
   app.use(urlencoded({ limit: '10mb', extended: true })); // Max of incoming request payload in URL-encoded format. For image in tutorial reasons.
-
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
