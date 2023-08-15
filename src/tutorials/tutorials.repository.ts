@@ -28,15 +28,15 @@ export class TutorialsRepository {
     throw Error(`The tutorial with id ${publicId} could not be updated with ${tutorial}`);
   }
 
-  async addFeedback(publicId: string, feedbacks: Feedback[]): Promise<Tutorial> {
+  async updateFeedbacks(publicId: string, feedbacks: Feedback[]): Promise<Feedback[]> {
     const updatedResult = await this.tutorialModel.updateOne({ publicId }, { $set: { feedbacks: feedbacks } }).exec();
     if (updatedResult.modifiedCount > 0) {
-      return await this.findByPublicId(publicId);
+      return feedbacks;
     }
     throw Error(`The tutorial with id ${publicId} could not be updated with new feedback.`);
   }
 
-  async getFeedbacks(publicId: string): Promise<Feedback[] | null> {
+  async findFeedbacks(publicId: string): Promise<Feedback[] | null> {
     const tutorial = await this.tutorialModel.findOne({ publicId: publicId }).exec();
     return tutorial?.feedbacks;
   }

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BlogsModule } from './blogs/blogs.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { TutorialsModule } from './tutorials/tutorialsModule';
+import { TutorialsModule } from './tutorials/tutorials.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { TutorialsService } from './tutorials.service';
 import { CreateTutorialDto, FeedbackDto, TutorialPreviewDto, UpdateTutorialDto } from './tutorial.dto';
-import { Tutorial } from './tutorial.model';
+import { Feedback, Tutorial } from './tutorial.model';
 import { TutorialNotFound } from './tutorial.error';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -67,13 +67,15 @@ export class TutorialsController {
   }
 
   @Patch(':id/feedback')
-  private async addFeedback(
+  private async updateFeedbacks(
     @Param('id', ParseUUIDPipe) publicId: string,
     @Body() feedback: FeedbackDto,
-  ): Promise<Tutorial> {
+  ): Promise<Feedback[]> {
     return this.service
-      .addFeedback(publicId, feedback)
-      .then((updatedTutorial) => updatedTutorial)
+      .updateFeedbacks(publicId, feedback)
+      .then((updatedFeedbacks) => {
+        return updatedFeedbacks;
+      })
       .catch((e) => this.handleError(e));
   }
 

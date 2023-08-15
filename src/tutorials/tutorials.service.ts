@@ -4,10 +4,11 @@ import { CreateTutorialDto, FeedbackDto, UpdateTutorialDto } from './tutorial.dt
 import { Feedback, Tutorial, UpdateTutorial } from './tutorial.model';
 import { TutorialNotFound } from './tutorial.error';
 import { v4 as uuidv4 } from 'uuid';
+import { FeedbackGatewayService } from './tutorials.gateway';
 
 @Injectable()
 export class TutorialsService {
-  constructor(private repository: TutorialsRepository) {}
+  constructor(private repository: TutorialsRepository, private feedbackGatewayService: FeedbackGatewayService) {}
 
   async create(createTutorialDto: CreateTutorialDto): Promise<Tutorial> {
     const tutorial = new Tutorial(
@@ -37,14 +38,18 @@ export class TutorialsService {
     return await this.repository.update(updateTutorialDto.publicId, updateTutorial);
   }
 
-  async addFeedback(publicId: string, feedbackDto: FeedbackDto): Promise<Tutorial> {
+  async updateFeedbacks(publicId: string, feedbackDto: FeedbackDto): Promise<Feedback[]> {
     const feedback: Feedback = new Feedback(feedbackDto.username, feedbackDto.message, new Date());
-    let feedbacks = await this.repository.getFeedbacks(publicId);
+    let feedbacks = await this.repository.findFeedbacks(publicId);
     if (!feedbacks) {
       feedbacks = [];
     }
     feedbacks.push(feedback);
-    return await this.repository.addFeedback(publicId, feedbacks);
+
+    const updatedFeedbacks = await this.repository.updateFeedbacks(publicId, feedbacks);
+    await this.feedbackGatewayService.broadcastNewFeedback(feedback);
+
+    return updatedFeedbacks;
   }
 
   async getByPublicId(publicId: string): Promise<Tutorial | TutorialNotFound> {
